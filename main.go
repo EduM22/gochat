@@ -6,6 +6,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/helmet/v2"
 )
 
 type client struct{} // Add more data to this type if needed
@@ -45,21 +50,40 @@ func runHub() {
 	}
 }
 
+type User struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}
+
 func main() {
 	app := fiber.New()
 
 	app.Static("/", "./public")
 
-	app.Use(func(c *fiber.Ctx) error {
+	app.Use(helmet.New())
+
+	app.Use(requestid.New())
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:8080, http://127.0.0.1:8080",
+	}))
+
+	app.Use(limiter.New(limiter.Config{
+		Max: 200,
+	}))
+
+	app.Use(logger.New(logger.Config{
+		Format: "${pid} ${locals:requestid} ${status} - ${method} ${path}​\n​",
+	}))
+
+	go runHub()
+
+	app.Get("/ws", func(c *fiber.Ctx) error {
 		if websocket.IsWebSocketUpgrade(c) { // Returns true if the client requested upgrade to the WebSocket protocol
 			return c.Next()
 		}
 		return c.SendStatus(fiber.StatusUpgradeRequired)
-	})
-
-	go runHub()
-
-	app.Get("/ws", websocket.New(func(c *websocket.Conn) {
+	}, websocket.New(func(c *websocket.Conn) {
 		// When the function returns, unregister the client and close the connection
 		defer func() {
 			unregister <- c
@@ -87,6 +111,19 @@ func main() {
 			}
 		}
 	}))
+
+	app.Get("/user", func(c *fiber.Ctx) error {
+        return c.JSON(&User{"John", 20})
+        // => {"name":"John", "age":20}
+    })
+
+    app.Get("/json", func(c *fiber.Ctx) error {
+        return c.JSON(fiber.Map{
+            "success": true,
+            "message": "Hi John!",
+        })
+        // => {"success":true, "message":"Hi John!"}
+    })
 
 	addr := flag.String("addr", ":8080", "http service address")
 	flag.Parse()

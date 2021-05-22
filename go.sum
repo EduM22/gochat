@@ -6,6 +6,8 @@ github.com/fasthttp/websocket v1.4.2/go.mod h1:smsv/h4PBEBaU0XDTY5UwJTpZv69fQ0Ff
 github.com/gofiber/fiber/v2 v2.1.3/go.mod h1:MMiSv1HrDkN8Pv7NeVDYK+T/lwXOEKAvPBbLvJPCEfA=
 github.com/gofiber/fiber/v2 v2.9.0 h1:sZsTKlbyGGZ0UdTUn3ItQv5J9FTQUc4J3OS+03lE5m0=
 github.com/gofiber/fiber/v2 v2.9.0/go.mod h1:Ah3IJikrKNRepl/HuVawppS25X7FWohwfCSRn7kJG28=
+github.com/gofiber/helmet/v2 v2.1.2 h1:dViKfHmLaymjeqdnDnCr2oAsbvvo5GoBkoUAgESc+u8=
+github.com/gofiber/helmet/v2 v2.1.2/go.mod h1:VJsoUPUYqiN465G6I+6FwmyQjMQA4LX0f0UfAf40uAA=
 github.com/gofiber/websocket/v2 v2.0.3 h1:nqPGHB4LQhxKX5KJUjayOd2xiiENieS/dn6TPfCL8uk=
 github.com/gofiber/websocket/v2 v2.0.3/go.mod h1:/OTEImCxORKE5unw0dWqJYovid6vZF+wB1W0aaMKs2M=
 github.com/klauspost/compress v1.8.2/go.mod h1:RyIbtBH6LamlWaDj8nUwkbUhJ87Yi3uG0guNDohfE1A=
